@@ -1,0 +1,2 @@
+Using fs.promisses to write file(
+This text added using append method)
