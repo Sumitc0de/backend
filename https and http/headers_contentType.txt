@@ -1,0 +1,28 @@
+| Content-Type                                    | Example                | Usage            |
+| ----------------------------------------------- | ---------------------- | ---------------- |
+| `text/plain`                                    | `"Hello, World!"`      | Plain text       |
+| `text/html`                                     | `<h1>Hello</h1>`       | HTML pages       |
+| `text/css`                                      | `body { color: red; }` | CSS stylesheets  |
+| `text/javascript` (or `application/javascript`) | `console.log("Hi");`   | JavaScript files |
+
+
+| Content-Type       | Example                           | Usage                           |
+| ------------------ | --------------------------------- | ------------------------------- |
+| `application/json` | `{ "name": "Sumit", "age": 20 }`  | JSON APIs (most common in REST) |
+| `application/xml`  | `<user><name>Sumit</name></user>` | XML-based APIs                  |
+| `text/xml`         | Same as above                     | Legacy XML services             |
+
+
+| Content-Type                        | Example                 | Usage                             |
+| ----------------------------------- | ----------------------- | --------------------------------- |
+| `application/x-www-form-urlencoded` | `username=sumit&age=20` | Default HTML `<form>` submission  |
+| `multipart/form-data`               | (binary + text mix)     | File uploads (images, PDFs, etc.) |
+
+
+| Content-Type | Example       | Usage  |
+| ------------ | ------------- | ------ |
+| `image/png`  | PNG file      | Images |
+| `image/jpeg` | JPG/JPEG file | Images |
+| `image/gif`  | GIF file      | Images |
+| `video/mp4`  | MP4 video     | Videos |
+| `audio/mpeg` | MP3 audio     | Audio  |

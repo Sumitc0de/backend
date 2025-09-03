@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO</title>
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background: #f5f7fa;
+            padding: 40px;
+        }
+
+        .todo-container {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        #input-field {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px 0 0 8px;
+            outline: none;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        #input-field:focus {
+            border-color: #007BFF;
+        }
+
+        #btn {
+            padding: 10px 20px;
+            border: none;
+            background: #007BFF;
+            color: white;
+            font-size: 16px;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        #btn:hover {
+            background: #0056b3;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            background: #f0f4f8;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        li:hover {
+            background: #e2e8f0;
+        }
+
+        .delete-btn {
+            background: crimson;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: darkred;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="todo-container">
+        <h1>Todo App</h1>
+
+        <div class="input-group">
+            <input id="input-field" type="text" placeholder="Enter task">
+            <button id="btn">Add</button>
+        </div>
+
+        <ul id="list-container"></ul>
+    </div>
+
+    <script>
+        const btn = document.getElementById("btn");
+        const baseURL = "http://localhost:3000";
+
+        async function addTodo(task) {
+            const res = await fetch(`${baseURL}/api/add?task=${encodeURIComponent(task)}`, {
+                method: "PUT"
+            });
+            return await res.json();  //return the changed todo data
+        }
+
+        async function deleteTodo(id) {
+            const res = await fetch(`${baseURL}/delete/${id}`, {
+                method: "DELETE"
+            });
+            return await res.json();  //return the changed todo data
+        }
+
+
+        async function loadTodos() {
+            const res = await fetch(`${baseURL}/read`, {
+                method: "GET"
+            });
+            const data = await res.json();
+            return data.todo;  // return todo
+        }
+
+        async function renderTodos() {
+            const todos = await loadTodos();
+            const listContainer = document.getElementById("list-container");
+            listContainer.innerHTML = "";
+
+            todos.forEach(todo => {
+                const li = document.createElement("li");
+                li.textContent = todo.content;
+
+                // delete button
+                const delBtn = document.createElement("button");
+                delBtn.textContent = "Delete";
+                delBtn.className = "delete-btn";
+
+                // 🔥 attach event
+                delBtn.addEventListener("click", async () => {
+                    await deleteTodo(todo.id);   // call backend
+                    await renderTodos();         // refresh list
+                });
+
+                li.appendChild(delBtn);
+                listContainer.appendChild(li);
+            });
+        }
+        btn.addEventListener("click", async () => {
+            const inputValue = document.getElementById("input-field").value.trim();
+            if (!inputValue) {
+                alert("Enter the task");
+                return;
+            }
+
+            await addTodo(inputValue);
+            document.getElementById("input-field").value = "";
+            await renderTodos();
+        });
+
+        // Load todos on page start
+        renderTodos();
+    </script>
+</body>
+
+</html>
